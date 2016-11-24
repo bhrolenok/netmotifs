@@ -33,6 +33,11 @@ def read_graph(fname):
 					# 	graph.add_edge(row,col,double_edge=False)
 		return graph
 
+def write_edgelist(graph,fname):
+	with open(fname,'w') as outf:
+		for e in graph.edges():
+			outf.write("{} {} 1\n".format(e[0],e[1]))
+
 def link_mask(G,A,B,C):
 	# 3 node subgraphs, 6 possible links
 	# A->B, B->A
@@ -172,8 +177,8 @@ def main(netfname):
 	print "Real graph counts:"
 	print real_subgraph_counts
 	print "Random graph counts (mean, then std):"
-	print random_subgraph_counts.mean(axis=1)
-	print random_subgraph_counts.std(axis=1)
+	print random_subgraph_counts.mean(axis=0)
+	print random_subgraph_counts.std(axis=0)
 
 if __name__ == '__main__':
 	main(sys.argv[1])
