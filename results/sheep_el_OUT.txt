@@ -1,0 +1,78 @@
+
+   Summary motif results
+   =====================
+mfinder Version 1.20
+
+MOTIF FINDER RESULTS:
+
+	Network name: ../../repos/netmotifs/edgelists/sheep_el.dat
+	Network type: Directed
+	Num of Nodes: 27 Num of Edges: 250
+	Num of Nodes with edges: 27
+	Maximal out degree (out-hub) : 18
+	Maximal in degree (in-hub) : 21
+	Roots num: 0 Leaves num: 1
+	Single Edges num: 215 Mutual Edges num: 15
+
+	Motif size searched  3
+	Total number of 3-node subgraphs : 2086
+	Number of random networks generated : 1000
+	Random networks generation method: Switches
+	Num of Switches range: 100.0-200.0, Success switches Ratio:0.053+-0.00
+
+The following motifs were found:
+
+Criteria taken : Pval < 0.010
+                 Mfactor > 1.10
+                 Uniqueness >= 4
+
+MOTIF	NREAL	NRAND		NREAL	NREAL	UNIQ	CREAL
+ID		STATS		ZSCORE	PVAL	VAL	[MILI]	
+12	341	292.7+-15.3	3.16	0.000	6	163.47
+
+0 0 1 
+1 0 0 
+0 0 0 
+
+
+
+
+Full list of subgraphs size 3 ids:
+
+	( Total num of different subgraphs size 3 is : 13 )
+
+MOTIF	NREAL	NRAND		NREAL	NREAL	CREAL	UNIQ
+ID		STATS		ZSCORE	PVAL	[MILI]	
+6	283	349.6+-13.3	-5.00	1.000	135.67	8
+
+12	341	292.7+-15.3	3.16	0.000	163.47	6
+
+14	61	66.7+-6.5	-0.88	0.811	29.24	5
+
+36	295	345.2+-9.8	-5.13	1.000	141.42	7
+
+38	776	745.7+-11.4	2.67	0.001	372.00	7
+
+46	76	69.3+-4.3	1.54	0.077	36.43	4
+
+74	46	60.1+-6.1	-2.32	0.991	22.05	4
+
+78	4	6.8+-2.1	-1.32	0.947	1.92	2
+
+98	17	45.1+-6.6	-4.28	1.000	8.15	3
+
+102	33	43.2+-6.1	-1.68	0.955	15.82	3
+
+108	58	48.9+-5.3	1.70	0.046	27.80	4
+
+110	15	13.9+-2.3	0.48	0.397	7.19	2
+
+238	1	0.4+-0.6	0.97	0.395	0.48	1
+
+
+
+ (Application total runtime was:   13.0 seconds.)
+
+ (Real network processing runtime was:    0.0 seconds.)
+
+ (Single Random network processing runtime was:    0.0 seconds.)

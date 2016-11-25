@@ -179,6 +179,8 @@ def main(netfname):
 	print "Random graph counts (mean, then std):"
 	print random_subgraph_counts.mean(axis=0)
 	print random_subgraph_counts.std(axis=0)
+	print "Real graph Z-score"
+	print (real_subgraph_counts - random_subgraph_counts.mean(axis=0))/random_subgraph_counts.std(axis=0)
 
 if __name__ == '__main__':
 	main(sys.argv[1])

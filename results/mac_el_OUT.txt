@@ -1,0 +1,90 @@
+
+   Summary motif results
+   =====================
+mfinder Version 1.20
+
+MOTIF FINDER RESULTS:
+
+	Network name: ../../repos/netmotifs/edgelists/mac_el.dat
+	Network type: Directed
+	Num of Nodes: 61 Num of Edges: 1187
+	Num of Nodes with edges: 61
+	Maximal out degree (out-hub) : 47
+	Maximal in degree (in-hub) : 41
+	Roots num: 0 Leaves num: 2
+	Single Edges num: 1113 Mutual Edges num: 20
+
+	Motif size searched  3
+	Total number of 3-node subgraphs : 25115
+	Number of random networks generated : 1000
+	Random networks generation method: Switches
+	Num of Switches range: 100.0-200.0, Success switches Ratio:0.094+-0.00
+
+The following motifs were found:
+
+Criteria taken : Pval < 0.010
+                 Mfactor > 1.10
+                 Uniqueness >= 4
+
+MOTIF	NREAL	NRAND		NREAL	NREAL	UNIQ	CREAL
+ID		STATS		ZSCORE	PVAL	VAL	[MILI]	
+12	5817	4730.2+-68.1	15.95	0.000	12	231.61
+
+0 0 1 
+1 0 0 
+0 0 0 
+
+46	316	257.5+-11.3	5.19	0.000	8	12.58
+
+0 1 1 
+1 0 1 
+0 0 0 
+
+108	164	91.3+-7.1	10.19	0.000	10	6.53
+
+0 0 1 
+1 0 1 
+1 0 0 
+
+
+
+
+Full list of subgraphs size 3 ids:
+
+	( Total num of different subgraphs size 3 is : 13 )
+
+MOTIF	NREAL	NRAND		NREAL	NREAL	CREAL	UNIQ
+ID		STATS		ZSCORE	PVAL	[MILI]	
+6	4712	5751.8+-55.5	-18.74	1.000	187.61	19
+
+12	5817	4730.2+-68.1	15.95	0.000	231.61	12
+
+14	308	313.2+-15.7	-0.33	0.630	12.26	8
+
+36	3430	4278.8+-43.7	-19.44	1.000	136.57	19
+
+38	8838	8196.7+-49.1	13.07	0.000	351.89	19
+
+46	316	257.5+-11.3	5.19	0.000	12.58	8
+
+74	149	181.4+-11.4	-2.84	0.997	5.93	8
+
+78	4	5.6+-1.9	-0.86	0.865	0.16	2
+
+98	15	621.0+-31.9	-19.01	1.000	0.60	4
+
+102	39	153.9+-12.9	-8.89	1.000	1.55	8
+
+108	164	91.3+-7.1	10.19	0.000	6.53	10
+
+110	14	12.3+-1.9	0.87	0.272	0.56	4
+
+238	0	0.0+-0.1	-0.11	1.000	0.00	0
+
+
+
+ (Application total runtime was:   2.90 minutes).
+
+ (Real network processing runtime was:    0.0 seconds.)
+
+ (Single Random network processing runtime was:    0.2 seconds.)
