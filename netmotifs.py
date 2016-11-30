@@ -180,7 +180,12 @@ def main(netfname):
 	print random_subgraph_counts.mean(axis=0)
 	print random_subgraph_counts.std(axis=0)
 	print "Real graph Z-score"
-	print (real_subgraph_counts - random_subgraph_counts.mean(axis=0))/random_subgraph_counts.std(axis=0)
-
+	zscore = (real_subgraph_counts - random_subgraph_counts.mean(axis=0))/random_subgraph_counts.std(axis=0)
+	print  zscore
+	print "Significant (p-value < 0.05):"
+	for val in numpy.argsort(zscore)[::-1]:
+		if zscore[val] < 1.96:
+			break
+		print val
 if __name__ == '__main__':
 	main(sys.argv[1])

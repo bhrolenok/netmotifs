@@ -1,0 +1,72 @@
+
+   Summary motif results
+   =====================
+mfinder Version 1.20
+
+MOTIF FINDER RESULTS:
+
+	Network name: ../../repos/netmotifs/edgelists/kangaroo_edited_el.dat
+	Network type: Directed
+	Num of Nodes: 16 Num of Edges: 182
+	Num of Nodes with edges: 16
+	Maximal out degree (out-hub) : 15
+	Maximal in degree (in-hub) : 15
+	Roots num: 0 Leaves num: 0
+	Single Edges num: 0 Mutual Edges num: 77
+
+	Motif size searched  3
+	Total number of 3-node subgraphs : 499
+	Number of random networks generated : 1000
+	Random networks generation method: Switches
+	Num of Switches range: 100.0-200.0, Success switches Ratio:0.020+-0.00
+
+The following motifs were found:
+
+Criteria taken : Pval < 0.010
+                 Mfactor > 1.10
+                 Uniqueness >= 4
+
+MOTIF	NREAL	NRAND		NREAL	NREAL	UNIQ	CREAL
+ID		STATS		ZSCORE	PVAL	VAL	[MILI]	
+
+
+
+Full list of subgraphs size 3 ids:
+
+	( Total num of different subgraphs size 3 is : 13 )
+
+MOTIF	NREAL	NRAND		NREAL	NREAL	CREAL	UNIQ
+ID		STATS		ZSCORE	PVAL	[MILI]	
+6	0	0.0+-0.0	888888	1.000	0.00	0
+
+12	0	0.0+-0.0	888888	1.000	0.00	0
+
+14	4	2.0+-0.1	19.32	0.000	8.02	1
+
+36	34	10.4+-0.7	34.13	0.000	68.14	1
+
+38	0	0.0+-0.0	888888	1.000	0.00	0
+
+46	111	47.8+-0.3	182.61	0.000	222.44	1
+
+74	0	0.0+-0.0	888888	1.000	0.00	0
+
+78	141	189.5+-6.2	-7.87	1.000	282.57	4
+
+98	0	0.0+-0.0	888888	1.000	0.00	0
+
+102	0	0.0+-0.0	888888	1.000	0.00	0
+
+108	0	0.0+-0.0	888888	1.000	0.00	0
+
+110	0	0.0+-0.0	888888	1.000	0.00	0
+
+238	209	225.3+-2.3	-7.04	1.000	418.84	4
+
+
+
+ (Application total runtime was:   12.0 seconds.)
+
+ (Real network processing runtime was:    0.0 seconds.)
+
+ (Single Random network processing runtime was:    0.0 seconds.)
