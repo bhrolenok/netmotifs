@@ -33,6 +33,14 @@ def read_graph(fname):
 					# 	graph.add_edge(row,col,double_edge=False)
 		return graph
 
+def read_edgelist(fname):
+	G = networkx.DiGraph()
+	with open(fname) as infile:
+		for row in infile.readlines():
+			u,v,weight = row.split()
+			G.add_edge(int(u),int(v))
+	return G
+
 def write_edgelist(graph,fname):
 	with open(fname,'w') as outf:
 		for e in graph.edges():
@@ -71,11 +79,95 @@ subgraphs = [
 			[True,	True,	True,	True,	True,	True], # ALL
 			]
 
+def int_to_subnet(n):
+	bitstring = "{:09b}".format(n)
+	rv = numpy.zeros((3,3))
+	for c in range(len(bitstring)):
+		# rv[numpy.unravel_index(c,rv.shape)] = int(bitstring[c])
+		# God knows why, but mfinder indexes in reverse
+		rv[numpy.unravel_index(8-c,rv.shape)] = int(bitstring[c])
+	return rv
+
+def subnet_to_int(G,A,B,C):
+	rv = 0
+	# 256 128  64  32  16   8   4   2   1
+	#  aa  ab  ac  ba  bb  bc  ca  cb  cc
+	#####################################
+	# Eugh. mfinder indexes in reverse
+	#   1   2   4   8  16  32  64 128 256
+	#  aa  ab  ac  ba  bb  bc  ca  cb  cc
+	# only look at off diagonal
+	if B in G[C]:
+		# rv += 2
+		rv += 128
+	if A in G[C]:
+		# rv += 4
+		rv += 64
+	if C in G[B]:
+		# rv += 8
+		rv += 32
+	if A in G[B]:
+		# rv += 32
+		rv += 8
+	if C in G[A]:
+		# rv += 64
+		rv += 4
+	if B in G[A]:
+		# rv += 128
+		rv += 2
+	return rv
+
+def int_to_nlinks(n):
+	tmp_n = n
+	link_count = 0
+	while tmp_n > 0:
+		if tmp_n%2 == 1:
+			link_count+=1
+		tmp_n = tmp_n>>1
+	return link_count
+
 def maskeq(m1,m2):
 	for idx in range(len(m1)):
 		if m1[idx] != m2[idx]:
 			return False
 	return True
+
+def count_subgraphs_n3_edgebased(G):
+	intcounts = numpy.array([0.,]*(2**(3*3)))
+	lasttime = time.time()
+	steps = 0
+	laststep = 0
+	num_edges = len(G.edges())
+	for e in G.edges():
+		A = e[0]
+		B = e[1]
+		# history = dict()
+		# for C in G[A].keys()+G[B].keys():
+		# for C in set(G[A]).union(set(G[B])).difference(set((A,B))):
+		adjs = set(G[A]).union(set(G[B]))
+		adjs = adjs.union(set(G.predecessors(A))).union(set(G.predecessors(B)))
+		adjs = adjs.difference(set((A,B)))
+		for C in adjs:
+			# if (C == A) or (C==B):
+			# 	continue
+			# subnet_set = tuple(set((A,B,C)))
+			# if subnet_set in history:
+			# 	continue
+			# history[subnet_set] = True
+			steps = steps+1
+			intcounts[subnet_to_int(G,A,B,C)] += 1.0
+			curtime = time.time()
+			if curtime-lasttime > timeout:
+				print "Step {} of {}, ({} steps per second)".format(steps,num_edges,float(steps-laststep)/float(curtime-lasttime))
+				lasttime = curtime
+				laststep = steps
+	for idx in range(len(intcounts)):
+		denom = int_to_nlinks(idx)
+		if denom > 0:
+			intcounts[idx] = intcounts[idx]/denom
+		else:
+			intcounts[idx]=0
+	return intcounts
 
 def count_subgraphs_n3(G):
 	counts = numpy.array([0.,]*13)
@@ -157,17 +249,20 @@ def randomize_linkswap(G,iters=100,temperature=None,initial_graph=None):
 			continue
 	return rv
 
-def main(netfname):
-	G=read_graph(netfname)
-	real_subgraph_counts = count_subgraphs_n3(G)
+def main(G):
+	# G=read_graph(netfname)
+	real_subgraph_counts = count_subgraphs_n3_edgebased(G) #count_subgraphs_n3(G)
 	random_subgraph_counts = list()
 	lasttime = time.time()
 	lastiter = 0
-	maxswaps = int(len(G.edges())/0.67)
-	print "Maximum number of swaps:",maxswaps
+	# maxswaps = int(len(G.edges())/0.67)
+	# Note: from the mfinder manual, the default number of swaps is 
+	# 100 times the number of nodes
+	maxswaps = len(G.node)*100
+	print "Swaps:",maxswaps
 	for iteration in range(1000):
-		R = randomize_linkswap(G,iters=max(1000,maxswaps))
-		random_subgraph_counts.append(count_subgraphs_n3(R))
+		R = randomize_linkswap(G,iters=maxswaps)
+		random_subgraph_counts.append(count_subgraphs_n3_edgebased(R)) #count_subgraphs_n3(R))
 		curtime = time.time()
 		if curtime-lasttime > timeout:
 			print "Iteration {} of {} ({} iterations per second)".format(iteration,1000,float(iteration-lastiter)/float(curtime-lasttime))
@@ -180,12 +275,16 @@ def main(netfname):
 	print random_subgraph_counts.mean(axis=0)
 	print random_subgraph_counts.std(axis=0)
 	print "Real graph Z-score"
-	zscore = (real_subgraph_counts - random_subgraph_counts.mean(axis=0))/random_subgraph_counts.std(axis=0)
+	denom = random_subgraph_counts.std(axis=0)
+	denom[denom==0] = 1.0
+	zscore = (real_subgraph_counts - random_subgraph_counts.mean(axis=0))/denom
 	print  zscore
-	print "Significant (p-value < 0.05):"
+	print "Significant (p-value < 0.01):"
 	for val in numpy.argsort(zscore)[::-1]:
-		if zscore[val] < 1.96:
+		if zscore[val] < 2.58:
 			break
-		print val
+		print val, zscore[val], real_subgraph_counts[val]
+		print int_to_subnet(val) 
 if __name__ == '__main__':
-	main(sys.argv[1])
+	G = read_graph(sys.argv[1])
+	main(G)
