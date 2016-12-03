@@ -1,8 +1,24 @@
 # netmotifs.py
-import networkx, numpy, scipy.misc, time
+import networkx, numpy, scipy.misc, time, itertools
 import sys
 
 timeout=60.0 # in seconds
+
+MIN_IDX_DICT=dict()
+
+def compute_min_idxs():
+	global MIN_IDX_DICT
+	for i in range(2**9):
+		MIN_IDX_DICT[i] = min_permutation3_index(int_to_subnet(i))
+
+def memoized_min_index(i):
+	global MIN_IDX_DICT
+	if i in MIN_IDX_DICT:
+		return MIN_IDX_DICT[i]
+	else:
+		MIN_IDX_DICT[i] = min_permutation3_index(int_to_subnet(i))
+		return MIN_IDX_DICT[i]
+	return 
 
 def read_graph(fname):
 	"""
@@ -88,6 +104,41 @@ def int_to_subnet(n):
 		rv[numpy.unravel_index(8-c,rv.shape)] = int(bitstring[c])
 	return rv
 
+def combine_3subnets(counts):
+	rv = numpy.array([0.,]*(2**(3*3)))
+
+def min_permutation3_index(subnet_adj):
+	#ABC, ACB, BAC, BCA, CAB, CBA
+	rv = None
+	orig = subnet_adj.copy()
+	for perm in itertools.permutations([0,1,2]):
+		perm_mat = orig.copy()
+		perm_mat[[0,1,2],:] = perm_mat[perm,:]
+		perm_mat[:,[0,1,2]] = perm_mat[:,perm]
+		if rv is None:
+			rv = mat_to_int(perm_mat)
+		else:
+			rv = min(rv,mat_to_int(perm_mat))
+	return rv
+	# ABC = subnet_adj.copy()
+	# ACB = orig.copy()
+	# ACB[[0,1,2],:] = ACB[[0,2,1],:]
+	# ACB[:,[0,1,2]] = ACB[:,[0,1,2]]
+	# AC = orig.copy()
+	# AC[[0,2],:] = AC[[2,0],:]
+	# AC[:,[0,2]] = AC[:,[2,0]]
+	# BC = orig.copy()
+	# BC[[1,2],:] = BC[[2,1],:]
+	# BC[:,[1,2]] = BC[:,[2,1]]
+	# return min(map(mat_to_int,[orig,AB,AC,BC]))
+
+def mat_to_int(mat):
+	rv = 0
+	for idx in range(9):
+		rv = rv<<1
+		rv += int(mat[numpy.unravel_index(8-idx,mat.shape)])
+	return rv
+
 def subnet_to_int(G,A,B,C):
 	rv = 0
 	# 256 128  64  32  16   8   4   2   1
@@ -155,7 +206,10 @@ def count_subgraphs_n3_edgebased(G):
 			# 	continue
 			# history[subnet_set] = True
 			steps = steps+1
-			intcounts[subnet_to_int(G,A,B,C)] += 1.0
+			orig_idx = subnet_to_int(G,A,B,C)
+			min_idx = memoized_min_index(orig_idx)
+			# intcounts[subnet_to_int(G,A,B,C)] += 1.0
+			intcounts[min_idx]+=1.0
 			curtime = time.time()
 			if curtime-lasttime > timeout:
 				print "Step {} of {}, ({} steps per second)".format(steps,num_edges,float(steps-laststep)/float(curtime-lasttime))
@@ -283,7 +337,8 @@ def main(G):
 	for val in numpy.argsort(zscore)[::-1]:
 		if zscore[val] < 2.58:
 			break
-		print val, zscore[val], real_subgraph_counts[val]
+		print "Real counts",val, zscore[val], real_subgraph_counts[val]
+		print "Random counts",random_subgraph_counts.mean(axis=0)[val], "+-",random_subgraph_counts.std(axis=0)[val]
 		print int_to_subnet(val) 
 if __name__ == '__main__':
 	G = read_graph(sys.argv[1])
